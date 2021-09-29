@@ -7,6 +7,7 @@ import {
   Col,
   Section,
   Button,
+  Notification
 } from 'sgds-govtech-react';
 
 import CONFIG from '../config';
@@ -71,12 +72,19 @@ function Todo(props: TodoProps) {
   }, [onRefreshClicked]);
 
   async function submitNewTodo() {
-    const newTodo = {
-      description: newTodoDescription,
-    };
-    await axios.post(`/api/todos`, newTodo);
-    await populateTodos();
-    setNewTodoDescription('');
+    // use trim to remove whitespaces from prefix/suffix
+    if (newTodoDescription.trim() !== "") {
+      const newTodo = {
+        description: newTodoDescription,
+      };
+      await axios.post(`/api/todos`, newTodo);
+      await populateTodos();
+      setNewTodoDescription('');
+    } else {
+      // sadge, this doesnt work 
+      // return (<Notification isToast icon="sgds-icon-callout" title="Error" content="Todo item should not be empty." />)
+      alert('Error. Todo item should not be empty.');
+    }
   }
 
   return (
