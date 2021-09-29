@@ -49,6 +49,7 @@ interface TodoProps {
 function Todo(props: TodoProps) {
   const [todoItems, setTodoItems] = useState<{ [id: string]: TodoItemProps }>({});
   const [newTodoDescription, setNewTodoDescription] = useState('');
+  const [isRefresh, setIsRefresh] = useState(false);
 
   const populateTodos = useCallback(async () => {
     const result = await axios.get(`${CONFIG.API_ENDPOINT}/todos`);
@@ -57,7 +58,18 @@ function Todo(props: TodoProps) {
 
   const onRefreshClicked = useCallback(async () => {
     console.log('Refresh button clicked');
+
+    /* start the refresh here */
+    setIsRefresh(true)
+    setTimeout(async () => {
+      await populateTodos();
+      /* stop the refresh here */
+      setIsRefresh(false)
+    }, 400);
+
     /* refresh todos here */
+    // await populateTodos();
+    // console.log('todoList updated')
   }, [populateTodos]);
 
   useEffect(() => {
@@ -98,7 +110,9 @@ function Todo(props: TodoProps) {
                       <Button isPrimary isLoading={false}>Submit</Button>
                     </Col>
                     <Col>
-                      {/* insert button here */}
+                      <Button type="button" isOutline isLoading={isRefresh} onClick={onRefreshClicked}>
+                        <span className='sgds-icon sgds-icon-refresh' />
+                      </Button>
                     </Col>
                   </Row>
                 </div>
