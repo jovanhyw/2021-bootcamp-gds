@@ -66,27 +66,27 @@ Route Table: Internet Access for Public Subnets
 */
 resource "aws_route_table" "route_table_public_az" {
   vpc_id = aws_vpc.gds_vpc.id
-  
+
   tags = {
     Name = "public-az-route"
   }
 }
 
 resource "aws_route" "route-public-az-internet" {
-  route_table_id = aws_route_table.route_table_public_az.id
+  route_table_id         = aws_route_table.route_table_public_az.id
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id = aws_internet_gateway.gds_igw.id
+  gateway_id             = aws_internet_gateway.gds_igw.id
 }
 
 // Attachment to public_subnet_1
 resource "aws_route_table_association" "route_public_az1_association" {
-  subnet_id = aws_subnet.public_subnet_1.id
+  subnet_id      = aws_subnet.public_subnet_1.id
   route_table_id = aws_route_table.route_table_public_az.id
 }
 
 // Attachment to public_subnet_2
 resource "aws_route_table_association" "route_public_az2_association" {
-  subnet_id = aws_subnet.public_subnet_2.id
+  subnet_id      = aws_subnet.public_subnet_2.id
   route_table_id = aws_route_table.route_table_public_az.id
 }
 
@@ -102,7 +102,7 @@ resource "aws_security_group" "allow_all" {
   vpc_id      = aws_vpc.gds_vpc.id
 
   tags = {
-    Name    = "gds_bad_security_group"
+    Name = "gds_bad_security_group"
   }
 }
 
@@ -114,7 +114,7 @@ resource "aws_security_group_rule" "allow_all_ingress" {
   to_port           = 0
   protocol          = "all"
   cidr_blocks = [
-    "116.89.41.13/32"
+    "0.0.0.0/0" // allow all so i dont expose my ip kekw
   ]
   description = "Allows all ingress"
 }

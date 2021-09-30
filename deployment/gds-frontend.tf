@@ -37,10 +37,10 @@ resource "aws_s3_bucket" "react_frontend" {
 // Content Type Setting
 locals {
   content_type_ext_mapping = {
-    "css" = "text/css"
+    "css"  = "text/css"
     "html" = "text/html"
-    "png" = "image/png"
-    "svg" = "image/svg+xml"
+    "png"  = "image/png"
+    "svg"  = "image/svg+xml"
   }
 }
 
@@ -50,10 +50,10 @@ resource "aws_s3_bucket_object" "react_frontend_build" {
     for file in fileset("../frontend/build/", "**") : file => file
     if substr(file, -3, -1) != ".js"
   }
-  bucket = aws_s3_bucket.react_frontend.bucket
-  key    = each.value
-  source = "../frontend/build/${each.value}"
-  etag   = filemd5("../frontend/build/${each.value}")
+  bucket       = aws_s3_bucket.react_frontend.bucket
+  key          = each.value
+  source       = "../frontend/build/${each.value}"
+  etag         = filemd5("../frontend/build/${each.value}")
   content_type = lookup(local.content_type_ext_mapping, element(split(".", each.value), length(split(".", each.value)) - 1), "text/html")
 }
 
@@ -63,16 +63,16 @@ resource "aws_s3_bucket_object" "react_frontend_build_js" {
     for file in fileset("../frontend/build/", "**") : file => file
     if substr(file, -3, -1) == ".js"
   }
-  bucket  = aws_s3_bucket.react_frontend.bucket
-  key     = each.value
-  content = replace(file("../frontend/build/${each.value}"), "$${TF_ENDPOINT_INPUT}", "http://replaceme.com/api")
-  etag    = md5(replace(file("../frontend/build/${each.value}"), "$${TF_ENDPOINT_INPUT}", "http://replaceme.com/api"))
+  bucket       = aws_s3_bucket.react_frontend.bucket
+  key          = each.value
+  content      = replace(file("../frontend/build/${each.value}"), "$${TF_ENDPOINT_INPUT}", "http://13.213.6.58/api")
+  etag         = md5(replace(file("../frontend/build/${each.value}"), "$${TF_ENDPOINT_INPUT}", "http://13.213.6.58/api"))
   content_type = "text/html"
 }
 
 // Frontend URL
 output "react_url" {
-  value = aws_s3_bucket.react_frontend.website_endpoint
+  value       = aws_s3_bucket.react_frontend.website_endpoint
   description = "The URL of the react application"
 }
 

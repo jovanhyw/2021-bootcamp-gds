@@ -2,17 +2,17 @@
   EC2 for Backend Services
 ******************************************************************/
 resource "aws_instance" "gds_backend_ec2" {
-  ami = "ami-082105f875acab993"
-  instance_type =  "t2.micro"
+  ami           = "ami-082105f875acab993"
+  instance_type = "t2.micro"
 
   # Network
   associate_public_ip_address = true
-  vpc_security_group_ids = [ aws_security_group.allow_all.id ]
-  subnet_id = aws_subnet.public_subnet_1.id
+  vpc_security_group_ids      = [aws_security_group.allow_all.id]
+  subnet_id                   = aws_subnet.public_subnet_1.id
 
   ebs_block_device {
     device_name = "/dev/xvda"
-    encrypted = true
+    encrypted   = true
     volume_size = 8
   }
 
@@ -21,12 +21,12 @@ resource "aws_instance" "gds_backend_ec2" {
     yum update -y
     yum install docker -y
     service docker start
-    docker run -d -p 80:80 nginxdemos/hello:plain-text
+    docker run -d -p 80:80 ghcr.io/jovanhyw/bootcamp-gds-backend:f0280f623ff2645a4228fc3b75ed8041370d5305
   EOF
   )
 }
 
 output "backend_url" {
-  value = aws_instance.gds_backend_ec2.public_ip
+  value       = aws_instance.gds_backend_ec2.public_ip
   description = "The URL of the backend application"
 }
