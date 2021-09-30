@@ -81,7 +81,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.BOOTCAMP_SECRET }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       # An alternative to the following steps is to use the build-push-action: https://github.com/docker/build-push-action
       - name: Build and Push the Frontend Docker Image
         run: |
